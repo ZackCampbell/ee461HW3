@@ -8,9 +8,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>$Title$</title>
+    <link rel="stylesheet" href="blogstyle.css">
+    <title>Write A New Post</title>
 </head>
 <body>
-$END$
+    <form name="examresultsform" action="examresults" method="post">
+        <table>
+            <tr>
+                <td style="font-weight:bold;">ID Number:</td>
+                <td><input name="idnumber"></input></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Submit"></td>
+                <td><input type="reset" value="Clear"></td>
+                <td><input type="reset" value="Cancel"></td>
+            </tr>
+        </table>
+    </form>
 </body>
 </html>

@@ -8,9 +8,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>$Title$</title>
+    <link rel="stylesheet" href="blogstyle.css">
+    <title>Here are all the posts from this blog:</title>
 </head>
 <body>
-$END$
+
 </body>
 </html>
