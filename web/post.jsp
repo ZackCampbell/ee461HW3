@@ -12,16 +12,16 @@
     <title>Write A New Post</title>
 </head>
 <body>
-    <form name="examresultsform" action="examresults" method="post">
+    <form name="postform" action="history.jsp" method="post">
         <table>
             <tr>
-                <td style="font-weight:bold;">ID Number:</td>
-                <td><input name="idnumber"></input></td>
+                <td style="font-weight:bold;"><input type="text" name="title" size="35" placeholder="Title"></td>
             </tr>
             <tr>
-                <td><input type="submit" value="Submit"></td>
-                <td><input type="reset" value="Clear"></td>
-                <td><input type="reset" value="Cancel"></td>
+                <td><textarea rows="8" cols="50" placeholder="Write your content here..."></textarea></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Submit"><a href="index.jsp" style="padding-left: auto"><input type="button" value="Cancel"></a></td>
             </tr>
         </table>
     </form>

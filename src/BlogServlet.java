@@ -17,12 +17,15 @@ public class BlogServlet extends HttpServlet {
 
         String userName = request.getParameter("userName");
         String content = request.getParameter("content");
-        Post post = new Post(user, userName, content);
+        Post post = new Post(user, content, userName);
 
-        Date date = new Date();
-        ofy().save().entity(post).now();   // synchronous
+        if (user != null) {
+            ofy().save().entity(post).now();   // synchronous
 
-        response.sendRedirect("/history.jsp?name=" + userName);
+            response.sendRedirect("/history.jsp?name=" + userName);
+        } else {
+            response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
