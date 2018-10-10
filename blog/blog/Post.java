@@ -26,6 +26,10 @@ public class Post implements Comparable<Post> {
         date = new Date();
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     public User getUser() {
         return user;
     }

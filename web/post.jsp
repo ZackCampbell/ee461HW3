@@ -26,7 +26,7 @@
                 <td style="font-weight:bold;"><input type="text" name="title" size="35" placeholder="Title"></td>
             </tr>
             <tr>
-                <td><textarea rows="8" cols="50" placeholder="Write your content here..."></textarea></td>
+                <td><textarea name="content" rows="8" cols="50" placeholder="Write your content here..."></textarea></td>
             </tr>
             <tr>
                 <td><input type="submit" value="Submit"><a href="index.jsp" style="padding-left: auto"><input type="button" value="Cancel"></a></td>

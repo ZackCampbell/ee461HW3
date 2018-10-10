@@ -2,13 +2,6 @@
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
-<%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
-<%@ page import="com.google.appengine.api.datastore.Query" %>
-<%@ page import="com.google.appengine.api.datastore.Entity" %>
-<%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
-<%@ page import="com.google.appengine.api.datastore.Key" %>
-<%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.googlecode.objectify.ObjectifyService" %>
 <%@ page import="blog.Post" %>
@@ -28,8 +21,8 @@
   <title>Software Lab Blog</title>
 </head>
 <body>
-<h1>Welcome To Our Blog!</h1><br>
-
+<h1>Software Lab Reviews!</h1><br>
+<img src="http://blog.reship.com/wp-content/uploads/2016/06/Best-Product-Review-Sites.jpg"><br>
 <%
     String userName = request.getParameter("userName");
     boolean test = true;
@@ -39,9 +32,7 @@
     }
 
     pageContext.setAttribute("userName", userName);
-
     UserService userService = UserServiceFactory.getUserService();
-
     User user = userService.getCurrentUser();
 
     if (user != null) {
@@ -66,7 +57,7 @@
 
 </p>
 <form action="post.jsp">
-    <input type="submit" value="Create a New blog.Post">
+    <input type="submit" value="Create a New Post">
 </form>
 
 <% } else { %>
@@ -87,7 +78,7 @@
     ObjectifyService.register(Post.class);
     List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();
     Collections.sort(posts);
-
+    Collections.reverse(posts);
     if (posts.isEmpty()) {
 
 %>
@@ -103,12 +94,15 @@
         } else if (posts.size() == 3) {
             n = 3;
         }
-        for (int i = posts.size() - n; i < posts.size(); i++) {
+        for (int i = 0; i < n; i++) {
             pageContext.setAttribute("post_content", posts.get(i).getContent());
             pageContext.setAttribute("post_user", posts.get(i).getUser());
+            pageContext.setAttribute("post_title", posts.get(i).getTitle());
+            pageContext.setAttribute("post_date", posts.get(i).getDate());
 %>
 
-<p><b>${fn:escapeXml(post_user.nickname)}</b> wrote:</p>
+<p><i>${fn:escapeXml(post_user.nickname)}</i> wrote:</p>
+<blockquote><b style="font-family: 'Book Antiqua'">${fn:escapeXml(post_title)}</b></blockquote>
 <blockquote>${fn:escapeXml(post_content)}</blockquote>
 
 <%      }

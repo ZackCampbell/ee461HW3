@@ -1,5 +1,4 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ page import="com.google.appengine.api.datastore.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.googlecode.objectify.ObjectifyService" %>
 <%@ page import="java.util.Collections" %>
@@ -22,6 +21,9 @@
 </head>
 <body>
     <h1>History of all posts:</h1><br>
+    <form name="postform" action="/index.jsp">
+        <input type="submit" value="Back to Home">
+    </form>
 <%
     String userName = request.getParameter("userName");
     pageContext.setAttribute("userName", userName);
@@ -34,7 +36,7 @@
     ObjectifyService.register(Post.class);
     List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();
     Collections.sort(posts);
-
+    Collections.reverse(posts);
     if (posts.isEmpty()) {
 
 %>
@@ -46,23 +48,14 @@
     for (Post post : posts) {
 
         pageContext.setAttribute("post_content", post.getContent());
-
-        if (post.getUser() == null) {
-
+        pageContext.setAttribute("post_user", post.getUser());
+        pageContext.setAttribute("post_title", post.getTitle());
+        pageContext.setAttribute("post_date", post.getDate());
 %>
 
-<p>An anonymous person wrote:</p>
-
-<%
-        } else {
-            pageContext.setAttribute("post_user", post.getUser());
-%>
-
-<p><b>${fn:escapeXml(post_user.nickname)}</b> wrote:</p>
-
-    <% } %>
-
-<blockquote>${fn:escapeXml(post_content)}</blockquote>
+<p><i>${fn:escapeXml(post_user.nickname)}</i> wrote on ${fn:escapeXml(post_date)}:</p>
+    <blockquote><b style="font-family: 'Book Antiqua'">${fn:escapeXml(post_title)}</b></blockquote>
+    <blockquote>${fn:escapeXml(post_content)}</blockquote>
 
 <% }
 }
