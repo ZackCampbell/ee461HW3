@@ -13,7 +13,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class BlogServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserService userService = UserServiceFactory.getUserService();
-
         User user = userService.getCurrentUser();
 
         String userName = request.getParameter("userName");
@@ -21,7 +20,6 @@ public class BlogServlet extends HttpServlet {
         Post post = new Post(user, userName, content);
 
         Date date = new Date();
-
         ofy().save().entity(post).now();   // synchronous
 
         response.sendRedirect("/history.jsp?name=" + userName);
