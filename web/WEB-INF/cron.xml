@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cronentries>
+    <cron>
+        <url>/crondaily</url>
+        <description>daily new post summary</description>
+        <schedule>every 24 hours at 17:00</schedule>
+        <timezone>America/Chicago</timezone>
+    </cron>
+</cronentries>

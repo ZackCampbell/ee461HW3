@@ -1,3 +1,5 @@
+package blog;
+
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
@@ -14,8 +16,11 @@ public class Post implements Comparable<Post> {
     @Index User user;
     @Index String content;
     @Index Date date;
-    public Post(User user, String content, String userName) {
+    @Index String title;
+    public Post() {}
+    public Post(User user, String content, String userName, String title) {
         this.user = user;
+        this.title = title;
         this.content = content;
         this.userName = Key.create(MyUser.class, userName);
         date = new Date();
@@ -26,6 +31,10 @@ public class Post implements Comparable<Post> {
     }
     public String getContent() {
         return content;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     @Override

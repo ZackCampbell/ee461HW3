@@ -5,19 +5,27 @@
          version="2.5">
     <servlet>
         <servlet-name>BlogServlet</servlet-name>
-        <servlet-class>BlogServlet</servlet-class>
+        <servlet-class>blog.BlogServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>BlogServlet</servlet-name>
-        <url-pattern>/history</url-pattern>
+        <url-pattern>/ofyblog</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>PostServlet</servlet-name>
-        <servlet-class>PostServlet</servlet-class>
+        <servlet-name>MyUserServlet</servlet-name>
+        <servlet-class>blog.MyUserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>PostServlet</servlet-name>
+        <servlet-name>MyUserServlet</servlet-name>
         <url-pattern>/post</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CronServlet</servlet-name>
+        <servlet-class>blog.CronServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CronServlet</servlet-name>
+        <url-pattern>/crondaily</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

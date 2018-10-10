@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
   Created by IntelliJ IDEA.
   User: audre
@@ -9,10 +10,17 @@
 <html>
 <head>
     <link rel="stylesheet" href="blogstyle.css">
-    <title>Write A New Post</title>
+    <title>Write A New blog.Post</title>
 </head>
 <body>
-    <form name="postform" action="/post" method="post">
+<%
+    String userName = request.getParameter("userName");
+    if (userName == null) {
+        userName = "default";
+    }
+    pageContext.setAttribute("userName", userName);
+%>
+    <form name="postform" action="/ofyblog" method="post">
         <table>
             <tr>
                 <td style="font-weight:bold;"><input type="text" name="title" size="35" placeholder="Title"></td>
@@ -22,6 +30,9 @@
             </tr>
             <tr>
                 <td><input type="submit" value="Submit"><a href="index.jsp" style="padding-left: auto"><input type="button" value="Cancel"></a></td>
+            </tr>
+            <tr>
+                <input type="hidden" name="userName" value="${fn:escapeXml(userName)}"/>
             </tr>
         </table>
     </form>

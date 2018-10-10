@@ -1,10 +1,10 @@
-import javax.servlet.ServletException;
+package blog;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
+
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -18,9 +18,13 @@ public class BlogServlet extends HttpServlet {
 
         String userName = request.getParameter("userName");
         String content = request.getParameter("content");
-        Post post = new Post(user, content, userName);
+        String title = request.getParameter("title");
+        Post post = new Post(user, content, userName, title);
+//        MyUser myUser = new MyUser(userName);
+
 
         ofy().save().entity(post).now();   // synchronous
+//        ofy().save().entity(myUser).now();
 
         response.sendRedirect("/history.jsp?name=" + userName);
     }

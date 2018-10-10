@@ -10,6 +10,9 @@
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.googlecode.objectify.ObjectifyService" %>
+<%@ page import="blog.Post" %>
+<%@ page import="java.util.Collections" %>
 <%--
   Created by IntelliJ IDEA.
   User: Vixon
@@ -29,10 +32,9 @@
 
 <%
     String userName = request.getParameter("userName");
-
+    boolean test = true;
     if (userName == null) {
-        // TODO
-        userName = "unavailable";
+        userName = "default";
 
     }
 
@@ -50,13 +52,24 @@
 
 <p>Hello, ${fn:escapeXml(user.nickname)}! (You can
 
-    <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a>.)</p>
+    <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a> or
 
-<%
+    <% if (test) { %>
 
-} else {
+    <a href="">Subscribe</a>)       <!-- SET SUBSCRIBED TO TRUE HERE -->
 
-%>
+    <% } else { %>
+
+    <a href="">Unsubscribe</a>)
+
+    <% } %>
+
+</p>
+<form action="post.jsp">
+    <input type="submit" value="Create a New blog.Post">
+</form>
+
+<% } else { %>
 
 <p>Hello!
 
@@ -64,29 +77,43 @@
 
     to make a new post.</p>
 
-<%
-
-    }
-
-%>
-
-
-<%
-    if (!userName.equals("unavailable")) {
-
-%>
-
-<form action="post.jsp">
-  <input type="submit" value="Create a New Post">
-</form>
-
-<%
-    }
-%>
+<% } %>
 
 <form action="history.jsp">
   <input type="submit" value="See All Posts">
 </form>
+
+<%
+    ObjectifyService.register(Post.class);
+    List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();
+    Collections.sort(posts);
+
+    if (posts.isEmpty()) {
+
+%>
+
+<p>'${fn:escapeXml(userName)}' has no messages.</p>
+
+<%  } else {
+        int n = 4;
+        if (posts.size() == 1) {
+            n = 1;
+        } else if (posts.size() == 2) {
+            n = 2;
+        } else if (posts.size() == 3) {
+            n = 3;
+        }
+        for (int i = posts.size() - n; i < posts.size(); i++) {
+            pageContext.setAttribute("post_content", posts.get(i).getContent());
+            pageContext.setAttribute("post_user", posts.get(i).getUser());
+%>
+
+<p><b>${fn:escapeXml(post_user.nickname)}</b> wrote:</p>
+<blockquote>${fn:escapeXml(post_content)}</blockquote>
+
+<%      }
+    }
+%>
 
 </body>
 </html>
