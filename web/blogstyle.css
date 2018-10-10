@@ -1,0 +1,21 @@
+body {
+    background-color: cadetblue;
+}
+h1 {
+    color: darkslategrey;
+	font-family: arial;
+    font-size: 300%;
+	text-align: center;
+}
+h2 {
+    color: maroon;
+	font-family: arial;
+    font-size: 160%;
+}
+a {
+    color: rebeccapurple;
+}
+table {
+    table-layout: auto;
+    width: 180px; 
+}
