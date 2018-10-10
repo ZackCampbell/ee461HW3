@@ -9,7 +9,15 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>BlogServlet</servlet-name>
-        <url-pattern>/blog</url-pattern>
+        <url-pattern>/history</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>PostServlet</servlet-name>
+        <servlet-class>PostServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostServlet</servlet-name>
+        <url-pattern>/post</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

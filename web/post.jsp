@@ -12,7 +12,7 @@
     <title>Write A New Post</title>
 </head>
 <body>
-    <form name="postform" action="history.jsp" method="post">
+    <form name="postform" action="/post" method="post">
         <table>
             <tr>
                 <td style="font-weight:bold;"><input type="text" name="title" size="35" placeholder="Title"></td>
