@@ -25,11 +25,11 @@ public class CronRemove extends HttpServlet {
             MimeMessage msg = new MimeMessage(session);
             Address from = new InternetAddress("AUTO_BLOG_DIGEST@461L.com");
             msg.setFrom(from);
-            msg.setSubject("Subscribed to Software Lab Reviews!");
+            msg.setSubject("Unsubscribed to Software Lab Reviews");
             msg.setSentDate(new Date());
-            msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
-                    "You will now recieve a 24-hour digest of the posts on this blog.");
-            for (MyUser myUser : ofy().load().type(MyUser.class)) {
+            msg.setText(" You have now unsubscribed from Software Lab Reviews. \n" +
+                    "Thank you for participating! Join again anytime.");
+            for (MyUser myUser : ofy().load().type(MyUser.class).list()) {
                 if (myUser.isSubscribed()) {
                     msg.addRecipients(Message.RecipientType.TO, myUser.getEmail());
                 }

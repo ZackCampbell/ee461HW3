@@ -28,7 +28,7 @@ public class CronInit extends HttpServlet {
             msg.setSentDate(new Date());
             msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
                     "You will now recieve a 24-hour digest of the posts on this blog.");
-            for (MyUser myUser : ofy().load().type(MyUser.class)) {
+            for (MyUser myUser : ofy().load().type(MyUser.class).list()) {
                 if (myUser.isSubscribed()) {
                     msg.addRecipients(Message.RecipientType.TO, myUser.getEmail());
                 }
