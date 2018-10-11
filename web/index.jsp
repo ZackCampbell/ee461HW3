@@ -6,6 +6,8 @@
 <%@ page import="com.googlecode.objectify.ObjectifyService" %>
 <%@ page import="blog.Post" %>
 <%@ page import="java.util.Collections" %>
+<%@ page import="static com.googlecode.objectify.ObjectifyService.ofy" %>
+<%@ page import="blog.MyUser" %>
 <%--
   Created by IntelliJ IDEA.
   User: Vixon
@@ -23,6 +25,21 @@
 <body>
 <h1>Software Lab Reviews!</h1><br>
 <img src="http://blog.reship.com/wp-content/uploads/2016/06/Best-Product-Review-Sites.jpg"><br>
+
+<%!
+    public void subscribe(String userName, String email) {
+        MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
+        currUser.setSubscribed(true);
+        currUser.setEmail(email);
+        ofy().save().entity(currUser).now();
+    }
+    public void unsubscribe(String userName) {
+        MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
+        currUser.setSubscribed(false);
+        ofy().save().entity(currUser).now();
+    }
+%>
+
 <%
     String userName = request.getParameter("userName");
     boolean test = true;
@@ -38,6 +55,8 @@
     if (user != null) {
 
         pageContext.setAttribute("user", user);
+        pageContext.setAttribute("userName", user.getNickname());
+        System.out.println(user.getNickname());
 
 %>
 
@@ -45,13 +64,13 @@
 
     <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a> or
 
-    <% if (test) { %>
+    <% if (!ofy().load().type(MyUser.class).id(userName).now().isSubscribed()) { %>
 
-    <a href="">Subscribe</a>)       <!-- SET SUBSCRIBED TO TRUE HERE -->
+    <a href="/croninit" onclick="<%= subscribe(userName, user.getEmail()) %>">Subscribe</a>)
 
     <% } else { %>
 
-    <a href="">Unsubscribe</a>)
+    <a href="/cronremove" onclick="<%= unsubscribe(userName) %>">Unsubscribe</a>)
 
     <% } %>
 
@@ -76,7 +95,7 @@
 
 <%
     ObjectifyService.register(Post.class);
-    List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();
+    List<Post> posts = ofy().load().type(Post.class).list();
     Collections.sort(posts);
     Collections.reverse(posts);
     if (posts.isEmpty()) {

@@ -20,6 +20,22 @@
         <url-pattern>/post</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>CronInit</servlet-name>
+        <servlet-class>blog.CronInit</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CronInit</servlet-name>
+        <url-pattern>/croninit</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CronRemove</servlet-name>
+        <servlet-class>blog.CronRemove</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CronRemove</servlet-name>
+        <url-pattern>/cronremove</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>CronServlet</servlet-name>
         <servlet-class>blog.CronServlet</servlet-class>
     </servlet>

@@ -1,20 +1,19 @@
 package blog;
 
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.*;
+import javax.mail.*;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-public class CronServlet extends HttpServlet {
-    private static final Logger _logger = Logger.getLogger(CronServlet.class.getName());
+public class CronInit extends HttpServlet {
+    private static final Logger _logger = Logger.getLogger(CronInit.class.getName());
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             _logger.info("Cron Init has been executed");

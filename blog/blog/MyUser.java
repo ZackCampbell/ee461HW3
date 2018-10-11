@@ -7,6 +7,7 @@ import com.googlecode.objectify.annotation.Id;
 public class MyUser {
     @Id long id;
     String name;
+    private String email;
     private boolean isSubscribed = false;
     
     public MyUser(String name) {
@@ -18,6 +19,14 @@ public class MyUser {
     }
     public boolean isSubscribed() {
         return isSubscribed;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

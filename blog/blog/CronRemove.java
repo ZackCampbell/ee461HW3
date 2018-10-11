@@ -13,8 +13,8 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-public class CronServlet extends HttpServlet {
-    private static final Logger _logger = Logger.getLogger(CronServlet.class.getName());
+public class CronRemove extends HttpServlet {
+    private static final Logger _logger = Logger.getLogger(CronRemove.class.getName());
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             _logger.info("Cron Init has been executed");
