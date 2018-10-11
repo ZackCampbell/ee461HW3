@@ -19,12 +19,10 @@ public class BlogServlet extends HttpServlet {
         String userName = request.getParameter("userName");
         String content = request.getParameter("content");
         String title = request.getParameter("title");
-        Post post = new Post(user, content, userName, title);
-//        MyUser myUser = new MyUser(userName);
-
+        String rating = request.getParameter("ratingSelect");
+        Post post = new Post(user, content, userName, title, rating);
 
         ofy().save().entity(post).now();   // synchronous
-//        ofy().save().entity(myUser).now();
 
         response.sendRedirect("/history.jsp?name=" + userName);
     }

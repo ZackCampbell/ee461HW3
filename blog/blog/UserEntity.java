@@ -12,13 +12,13 @@ public class UserEntity {
     @Parent Key<MyUser> userName;
     @Id Long id;
     @Index User user;
-    @Index boolean isSubscribed = false;
+    @Index boolean isSubscribed;
     @Index String email;
     public UserEntity() {}
-    public UserEntity(User user, String userName, boolean isSubscribed, String email) {
+    public UserEntity(User user, String userName, String email) {
         this.user = user;
-        this.isSubscribed = isSubscribed;
         this.email = email;
+        isSubscribed = false;
         this.userName = Key.create(MyUser.class, userName);
     }
 

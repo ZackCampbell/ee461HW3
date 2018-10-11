@@ -24,6 +24,15 @@
         <table>
             <tr>
                 <td style="font-weight:bold;"><input type="text" name="title" size="35" placeholder="Title"></td>
+                <td>
+                    <select name="ratingSelect" required>
+                        <option value="One">One</option>
+                        <option value="Two">Two</option>
+                        <option value="Three">Three</option>
+                        <option value="Four">Four</option>
+                        <option value="Five">Five</option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td><textarea name="content" rows="8" cols="50" placeholder="Write your content here..."></textarea></td>
@@ -36,5 +45,6 @@
             </tr>
         </table>
     </form>
+
 </body>
 </html>

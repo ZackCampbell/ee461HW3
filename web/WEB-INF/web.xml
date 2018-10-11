@@ -12,14 +12,6 @@
         <url-pattern>/ofyblog</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>MyUserServlet</servlet-name>
-        <servlet-class>blog.MyUserServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>MyUserServlet</servlet-name>
-        <url-pattern>/post</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>CronInit</servlet-name>
         <servlet-class>blog.CronInit</servlet-class>
     </servlet>

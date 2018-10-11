@@ -7,8 +7,6 @@
 <%@ page import="blog.Post" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="static com.googlecode.objectify.ObjectifyService.ofy" %>
-<%@ page import="blog.MyUser" %>
-<%@ page import="blog.MyPost" %>
 <%@ page import="blog.UserEntity" %>
 <%--
   Created by IntelliJ IDEA.
@@ -25,34 +23,13 @@
   <title>Software Lab Blog</title>
 </head>
 <body>
-<h1>Software Lab Reviews!</h1><br>
+<h1>Software Lab Reviews</h1><br>
+<h2>Read what your peers have to say about the class!</h2><br>
 <img src="http://blog.reship.com/wp-content/uploads/2016/06/Best-Product-Review-Sites.jpg"><br>
-
-<%!
-    public String subscribe(String userName, String email) {
-        if (!userName.equals("default")) {
-            UserEntity currUser = ofy().load().type(UserEntity.class).id(userName).now();
-            currUser.setSubscribed(true);
-            currUser.setEmail(email);
-            ofy().save().entity(currUser).now();
-        }
-        return "/index.jsp";
-    }
-    %>
-
-<%!
-    public String unsubscribe(String userName) {
-        if (!userName.equals("default")) {
-            MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
-            currUser.setSubscribed(false);
-            ofy().save().entity(currUser).now();
-        }
-        return "/index.jsp";
-    }
-%>
 
 <%
     String userName = request.getParameter("userName");
+    ObjectifyService.register(UserEntity.class);
     if (userName == null) {
         userName = "default";
 
@@ -66,28 +43,45 @@
 
         pageContext.setAttribute("user", user);
 
+        UserEntity userEntity = new UserEntity(user, userName, user.getEmail());
+        if (!ofy().load().type(UserEntity.class).list().contains(userEntity)) {
+            ofy().save().entity(userEntity).now();
+        }
+        UserEntity testUser = ofy().load().type(UserEntity.class).filter("email", user.getEmail()).first().now();
+        if (testUser == null) {
+            System.out.println("testUser is null");
+        }
+//        List<UserEntity> users = ofy().load().type(UserEntity.class).list();
+//        System.out.println("Current Database:");
+//        for (UserEntity u : users) {
+//            System.out.println(u.getEmail());
+//        }
+
+        boolean isSubscribed = testUser.isSubscribed();
+
 %>
 
 <p>Hello, ${fn:escapeXml(user.nickname)}! (You can
 
-    <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a> or
+    <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a>)</p>
 
-    <% if (!ofy().load().type(MyUser.class).id(userName).now().isSubscribed()) { %>
+    <% if (!isSubscribed) { %>
 
-    <form action="/croninit">
-        <a href="<%= subscribe(userName, user.getEmail()) %>"><input type="submit">Subscribe</a>
-    </form>)
+    <form action="/croninit" method="post">
+        <input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">
+        <input type="hidden" name="email" value="<%= user.getEmail() %>">
+        <input type="submit" value="Subscribe">
+    </form>
 
     <% } else { %>
 
-    <form action="/cronremove">
-        <a href="<%= unsubscribe(userName) %>"><input type="submit">Unsubscribe</a>
-    </form>)
-
+    <form action="/cronremove" method="post">
+        <input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">
+        <input type="hidden" name="email" value="<%= user.getEmail() %>">
+        <input type="submit" value="Unsubscribe">
+    </form>
 
     <% } %>
-
-</p>
 <form action="post.jsp">
     <input type="submit" value="Create a New Post">
 </form>
@@ -131,10 +125,12 @@
             pageContext.setAttribute("post_user", posts.get(i).getUser());
             pageContext.setAttribute("post_title", posts.get(i).getTitle());
             pageContext.setAttribute("post_date", posts.get(i).getDate());
+            pageContext.setAttribute("post_rating", posts.get(i).getRating());
 %>
 
 <p><i>${fn:escapeXml(post_user.nickname)}</i> wrote on ${fn:escapeXml(post_date)}:</p>
-<h3><b style="font-family: 'Book Antiqua'">${fn:escapeXml(post_title)}</b></h3><br>
+<h3>Rating: ${fn:escapeXml(post_rating)}/Five</h3>
+<h3><b>"${fn:escapeXml(post_title)}"</b></h3>
 <blockquote>${fn:escapeXml(post_content)}</blockquote>
 
 <%      }

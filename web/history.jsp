@@ -24,7 +24,7 @@
     <%
 
     %>
-    <form name="postform" action="index.jsp">
+    <form name="postform" action="/index.jsp">
         <input type="submit" value="Back to Home">
         <input type="hidden" name="userName" value="${fn:escapeXml(userName)}">
     </form>
@@ -55,10 +55,12 @@
         pageContext.setAttribute("post_user", post.getUser());
         pageContext.setAttribute("post_title", post.getTitle());
         pageContext.setAttribute("post_date", post.getDate());
+        pageContext.setAttribute("post_rating", post.getRating());
 %>
 
 <p><i>${fn:escapeXml(post_user.nickname)}</i> wrote on ${fn:escapeXml(post_date)}:</p>
-    <blockquote><b style="font-family: 'Book Antiqua'">${fn:escapeXml(post_title)}</b></blockquote>
+    <h3>Rating: ${fn:escapeXml(post_rating)}/Five</h3>
+    <h3><b>"${fn:escapeXml(post_title)}"</b></h3>
     <blockquote>${fn:escapeXml(post_content)}</blockquote>
 
 <% }

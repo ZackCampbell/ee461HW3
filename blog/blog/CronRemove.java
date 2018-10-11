@@ -18,23 +18,22 @@ public class CronRemove extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             _logger.info("Cron Init has been executed");
+            String userName = request.getParameter("userName");
+
             Properties props = new Properties();
-            //props.put("mail.smtp.host", "my-mail-server");
             Session session = Session.getInstance(props, null);
 
             MimeMessage msg = new MimeMessage(session);
-            Address from = new InternetAddress("AUTO_BLOG_DIGEST@EE461HW3Blog.appspotmail.com");
+            Address from = new InternetAddress("AUTO_BLOG_DIGEST_NOREPLY@EE461HW3Blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Unsubscribed to Software Lab Reviews");
             msg.setSentDate(new Date());
             msg.setText(" You have now unsubscribed from Software Lab Reviews. \n" +
                     "Thank you for participating! Join again anytime.");
-            for (MyUser myUser : ofy().load().type(MyUser.class).list()) {
-                if (myUser.isSubscribed()) {
-                    msg.addRecipients(Message.RecipientType.TO, myUser.getEmail());
-                }
-            }
+            Address to = new InternetAddress(ofy().load().type(UserEntity.class).id(userName).now().getEmail());
+            msg.addRecipient(Message.RecipientType.TO, to);
             Transport.send(msg);
+            response.sendRedirect("/index.jsp");
         } catch (Exception ex) {
             System.out.println("Send Failed, Exception: " + ex);
         }

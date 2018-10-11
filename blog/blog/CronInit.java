@@ -1,6 +1,10 @@
 package blog;
 
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
@@ -16,31 +20,28 @@ public class CronInit extends HttpServlet {
     private static final Logger _logger = Logger.getLogger(CronInit.class.getName());
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String userName = request.getParameter("userName");
-//            if (userName == null) {
-//                userName = "new_user";
-//            }
-            if (ofy().load().type(UserEntity.class).id(userName) == null) {
-
-            }
             _logger.info("Cron Init has been executed");
+            UserService userService = UserServiceFactory.getUserService();
+            User user = userService.getCurrentUser();
+            String userName = request.getParameter("userName");
+            UserEntity userEntity = ofy().load().type(UserEntity.class).filter("email", user.getEmail()).first().now();
+            userEntity.setSubscribed(true);
+            ofy().save().entity(userEntity).now();
+
             Properties props = new Properties();
-            //props.put("mail.smtp.host", "my-mail-server");
             Session session = Session.getInstance(props, null);
 
             MimeMessage msg = new MimeMessage(session);
-            Address from = new InternetAddress("AUTO_BLOG_DIGEST@EE461HW3Blog.appspotmail.com");
+            Address from = new InternetAddress("AUTO_BLOG_DIGEST_NOREPLY@EE461HW3Blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Subscribed to Software Lab Reviews!");
             msg.setSentDate(new Date());
             msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
-                    "You will now recieve a 24-hour digest of the posts on this blog.");
-            for (UserEntity userEntity : ofy().load().type(UserEntity.class).list()) {
-                if (userEntity.isSubscribed()) {
-                    msg.addRecipients(Message.RecipientType.TO, userEntity.getEmail());
-                }
-            }
+                    "You will now receive a 24-hour digest of the posts on this blog.");
+            Address to = new InternetAddress(ofy().load().type(UserEntity.class).id(userName).now().getEmail());
+            msg.addRecipient(Message.RecipientType.TO, to);
             Transport.send(msg);
+            response.sendRedirect("/index.jsp");
         } catch (Exception ex) {
             System.out.println("Send Failed, Exception: " + ex);
         }

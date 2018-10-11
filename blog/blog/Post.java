@@ -11,18 +11,20 @@ import java.util.Date;
 
 @Entity
 public class Post implements Comparable<Post> {
-    @Parent Key<MyPost> userName;
+    @Parent Key<MyPost> postName;
     @Id Long id;
     @Index User user;
     @Index String content;
     @Index Date date;
     @Index String title;
+    @Index String rating;
     public Post() {}
-    public Post(User user, String content, String userName, String title) {
+    public Post(User user, String content, String postName, String title, String rating) {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.userName = Key.create(MyPost.class, userName);
+        this.rating = rating;
+        this.postName = Key.create(MyPost.class, postName);
         date = new Date();
     }
 
@@ -39,6 +41,14 @@ public class Post implements Comparable<Post> {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     @Override

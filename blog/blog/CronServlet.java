@@ -25,19 +25,18 @@ public class CronServlet extends HttpServlet {
             }
             _logger.info("Cron Init has been executed");
             Properties props = new Properties();
-            //props.put("mail.smtp.host", "my-mail-server");
             Session session = Session.getInstance(props, null);
 
             MimeMessage msg = new MimeMessage(session);
-            Address from = new InternetAddress("AUTO_BLOG_DIGEST@EE461HW3Blog.appspotmail.com");
+            Address from = new InternetAddress("AUTO_BLOG_DIGEST_NOREPLY@EE461HW3Blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Subscribed to Software Lab Reviews!");
             Date date = new Date();
             msg.setSentDate(date);
 
-            for (MyUser myUser : ofy().load().type(MyUser.class)) {
-                if (myUser.isSubscribed()) {
-                    msg.addRecipients(Message.RecipientType.TO, myUser.getEmail());
+            for (UserEntity userEntity : ofy().load().type(UserEntity.class)) {
+                if (userEntity.isSubscribed()) {
+                    msg.addRecipients(Message.RecipientType.TO, userEntity.getEmail());
                 }
             }
             msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
@@ -51,7 +50,7 @@ public class CronServlet extends HttpServlet {
                     MimeBodyPart userPart = new MimeBodyPart();
                     MimeBodyPart titlePart = new MimeBodyPart();
                     MimeBodyPart contentPart = new MimeBodyPart();
-                    userPart.setText(post.userName.getName());
+                    userPart.setText(post.postName.getName());
                     titlePart.setText(post.getTitle());
                     contentPart.setText(post.getContent());
                     parts.addBodyPart(userPart);
@@ -61,6 +60,7 @@ public class CronServlet extends HttpServlet {
             }
             msg.setContent(parts);
             Transport.send(msg);
+            response.sendRedirect("/index.jsp");
         } catch (Exception ex) {
             System.out.println("Send Failed, Exception: " + ex);
         }
@@ -68,5 +68,6 @@ public class CronServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         doGet(req, resp);
+
     }
 }

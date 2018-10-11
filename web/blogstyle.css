@@ -3,21 +3,29 @@ body {
 }
 h1 {
     color: darkslategrey;
-	font-family: arial;
+    font-family: arial;
     font-size: 300%;
-	text-align: center;
+    text-align: center;
 }
 h2 {
-    color: maroon;
-	font-family: arial;
+    color: darkslateblue;
+    text-align: center;
+    font-family: arial;
     font-size: 160%;
 }
+
+h3 {
+    color: darkslategrey;
+    font-family: Book Antiqua;
+    font-size: 100%
+}
+
 a {
     color: rebeccapurple;
 }
 table {
     table-layout: auto;
-    width: 180px; 
+    width: 180px;
 }
 
 img {
@@ -25,4 +33,22 @@ img {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+}
+
+blockquote {
+    background: mistyrose;
+    border-left: 10px solid salmon;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+    quotes: "\201C""\201D""\2018""\2019";
+}
+
+select {
+    background: #eec111;
+    font-family: Arial;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    color: #000000;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
 }
