@@ -18,40 +18,48 @@ public class CronServlet extends HttpServlet {
     private static final Logger _logger = Logger.getLogger(CronServlet.class.getName());
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            List<Post> posts = ofy().load().type(Post.class).list();
+            if (posts.isEmpty()) {
+                _logger.info("No Posts in the last 24 hours");
+                return;
+            }
             _logger.info("Cron Init has been executed");
             Properties props = new Properties();
-            props.put("mail.smtp.host", "my-mail-server");
+            //props.put("mail.smtp.host", "my-mail-server");
             Session session = Session.getInstance(props, null);
 
             MimeMessage msg = new MimeMessage(session);
-            Address from = new InternetAddress("AUTO_BLOG_DIGEST@461L.com");
+            Address from = new InternetAddress("AUTO_BLOG_DIGEST@EE461HW3Blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Subscribed to Software Lab Reviews!");
-            msg.setSentDate(new Date());
+            Date date = new Date();
+            msg.setSentDate(date);
 
             for (MyUser myUser : ofy().load().type(MyUser.class)) {
                 if (myUser.isSubscribed()) {
                     msg.addRecipients(Message.RecipientType.TO, myUser.getEmail());
                 }
             }
+            msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
+                    "You will now receive a 24-hour digest of the posts on this blog.");
+
             MimeMultipart parts = new MimeMultipart();
-            List<Post> posts = ofy().load().type(Post.class).list();
             Collections.sort(posts);
             Collections.reverse(posts);
             for (Post post : posts) {
-                MimeBodyPart userPart = new MimeBodyPart();
-                MimeBodyPart titlePart = new MimeBodyPart();
-                MimeBodyPart contentPart = new MimeBodyPart();
-                userPart.setText(post.userName.getName());
-                titlePart.setText(post.getTitle());
-                contentPart.setText(post.getContent());
-                parts.addBodyPart(userPart);
-                parts.addBodyPart(titlePart);
-                parts.addBodyPart(contentPart);
-                msg.setContent(parts);
+                if (post.getDate().getTime() >= date.getTime() - 86400000) {
+                    MimeBodyPart userPart = new MimeBodyPart();
+                    MimeBodyPart titlePart = new MimeBodyPart();
+                    MimeBodyPart contentPart = new MimeBodyPart();
+                    userPart.setText(post.userName.getName());
+                    titlePart.setText(post.getTitle());
+                    contentPart.setText(post.getContent());
+                    parts.addBodyPart(userPart);
+                    parts.addBodyPart(titlePart);
+                    parts.addBodyPart(contentPart);
+                }
             }
-            msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
-                    "You will now recieve a 24-hour digest of the posts on this blog.");
+            msg.setContent(parts);
             Transport.send(msg);
         } catch (Exception ex) {
             System.out.println("Send Failed, Exception: " + ex);

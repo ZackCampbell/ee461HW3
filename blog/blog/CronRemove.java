@@ -19,11 +19,11 @@ public class CronRemove extends HttpServlet {
         try {
             _logger.info("Cron Init has been executed");
             Properties props = new Properties();
-            props.put("mail.smtp.host", "my-mail-server");
+            //props.put("mail.smtp.host", "my-mail-server");
             Session session = Session.getInstance(props, null);
 
             MimeMessage msg = new MimeMessage(session);
-            Address from = new InternetAddress("AUTO_BLOG_DIGEST@461L.com");
+            Address from = new InternetAddress("AUTO_BLOG_DIGEST@EE461HW3Blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Unsubscribed to Software Lab Reviews");
             msg.setSentDate(new Date());

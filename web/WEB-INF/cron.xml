@@ -6,16 +6,4 @@
         <schedule>every 24 hours from 17:00 to 17:00</schedule>
         <timezone>America/Chicago</timezone>
     </cron>
-    <cron>
-        <url>/croninit</url>
-        <description>Just subscribed to email list</description>
-        <schedule>once</schedule>
-        <timezone>America/Chicago</timezone>
-    </cron>
-    <cron>
-        <url>/cronremove</url>
-        <description>Just unsubscribed from email list</description>
-        <schedule>once</schedule>
-        <timezone>America/Chicago</timezone>
-    </cron>
 </cronentries>

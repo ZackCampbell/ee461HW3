@@ -21,8 +21,12 @@
 </head>
 <body>
     <h1>History of all posts:</h1><br>
+    <%
+
+    %>
     <form name="postform" action="/index.jsp">
         <input type="submit" value="Back to Home">
+        <input type="hidden" name="userName" value="${fn:escapeXml(userName)}">
     </form>
 <%
     String userName = request.getParameter("userName");
@@ -41,7 +45,7 @@
 
 %>
 
-<p>'${fn:escapeXml(userName)}' has no messages.</p>
+<p>There are no posts available.</p>
 
 <%  } else {
 

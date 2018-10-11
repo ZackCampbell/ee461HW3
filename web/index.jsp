@@ -27,22 +27,30 @@
 <img src="http://blog.reship.com/wp-content/uploads/2016/06/Best-Product-Review-Sites.jpg"><br>
 
 <%!
-    public void subscribe(String userName, String email) {
-        MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
-        currUser.setSubscribed(true);
-        currUser.setEmail(email);
-        ofy().save().entity(currUser).now();
+    public String subscribe(String userName, String email) {
+        if (!userName.equals("default")) {
+            MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
+            currUser.setSubscribed(true);
+            currUser.setEmail(email);
+            ofy().save().entity(currUser).now();
+        }
+        return "/index.jsp";
     }
-    public void unsubscribe(String userName) {
-        MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
-        currUser.setSubscribed(false);
-        ofy().save().entity(currUser).now();
+    %>
+
+<%!
+    public String unsubscribe(String userName) {
+        if (!userName.equals("default")) {
+            MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
+            currUser.setSubscribed(false);
+            ofy().save().entity(currUser).now();
+        }
+        return "/index.jsp";
     }
 %>
 
 <%
     String userName = request.getParameter("userName");
-    boolean test = true;
     if (userName == null) {
         userName = "default";
 
@@ -55,8 +63,6 @@
     if (user != null) {
 
         pageContext.setAttribute("user", user);
-        pageContext.setAttribute("userName", user.getNickname());
-        System.out.println(user.getNickname());
 
 %>
 
@@ -64,13 +70,18 @@
 
     <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a> or
 
-    <% if (!ofy().load().type(MyUser.class).id(userName).now().isSubscribed()) { %>
+    <% if (!userName.equals("default") && ofy().load().type(MyUser.class).id(userName).now() != null && !ofy().load().type(MyUser.class).id(userName).now().isSubscribed()) { %>
 
-    <a href="/croninit" onclick="<%= subscribe(userName, user.getEmail()) %>">Subscribe</a>)
+    <form action="/croninit">
+        <a href="<%= subscribe(userName, user.getEmail()) %>"><input type="submit">Subscribe</a>
+    </form>)
 
     <% } else { %>
 
-    <a href="/cronremove" onclick="<%= unsubscribe(userName) %>">Unsubscribe</a>)
+    <form action="/cronremove">
+        <a href="<%= unsubscribe(userName) %>"><input type="submit">Unsubscribe</a>
+    </form>)
+
 
     <% } %>
 
