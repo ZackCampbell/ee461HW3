@@ -8,6 +8,8 @@
 <%@ page import="java.util.Collections" %>
 <%@ page import="static com.googlecode.objectify.ObjectifyService.ofy" %>
 <%@ page import="blog.MyUser" %>
+<%@ page import="blog.MyPost" %>
+<%@ page import="blog.UserEntity" %>
 <%--
   Created by IntelliJ IDEA.
   User: Vixon
@@ -29,7 +31,7 @@
 <%!
     public String subscribe(String userName, String email) {
         if (!userName.equals("default")) {
-            MyUser currUser = ofy().load().type(MyUser.class).id(userName).now();
+            UserEntity currUser = ofy().load().type(UserEntity.class).id(userName).now();
             currUser.setSubscribed(true);
             currUser.setEmail(email);
             ofy().save().entity(currUser).now();
@@ -70,7 +72,7 @@
 
     <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Sign out</a> or
 
-    <% if (!userName.equals("default") && ofy().load().type(MyUser.class).id(userName).now() != null && !ofy().load().type(MyUser.class).id(userName).now().isSubscribed()) { %>
+    <% if (!ofy().load().type(MyUser.class).id(userName).now().isSubscribed()) { %>
 
     <form action="/croninit">
         <a href="<%= subscribe(userName, user.getEmail()) %>"><input type="submit">Subscribe</a>
@@ -113,7 +115,7 @@
 
 %>
 
-<p>'${fn:escapeXml(userName)}' has no messages.</p>
+<p>There are no posts available.</p>
 
 <%  } else {
         int n = 4;
@@ -131,8 +133,8 @@
             pageContext.setAttribute("post_date", posts.get(i).getDate());
 %>
 
-<p><i>${fn:escapeXml(post_user.nickname)}</i> wrote:</p>
-<blockquote><b style="font-family: 'Book Antiqua'">${fn:escapeXml(post_title)}</b></blockquote>
+<p><i>${fn:escapeXml(post_user.nickname)}</i> wrote on ${fn:escapeXml(post_date)}:</p>
+<h3><b style="font-family: 'Book Antiqua'">${fn:escapeXml(post_title)}</b></h3><br>
 <blockquote>${fn:escapeXml(post_content)}</blockquote>
 
 <%      }

@@ -16,6 +16,13 @@ public class CronInit extends HttpServlet {
     private static final Logger _logger = Logger.getLogger(CronInit.class.getName());
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            String userName = request.getParameter("userName");
+//            if (userName == null) {
+//                userName = "new_user";
+//            }
+            if (ofy().load().type(UserEntity.class).id(userName) == null) {
+
+            }
             _logger.info("Cron Init has been executed");
             Properties props = new Properties();
             //props.put("mail.smtp.host", "my-mail-server");
@@ -28,9 +35,9 @@ public class CronInit extends HttpServlet {
             msg.setSentDate(new Date());
             msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
                     "You will now recieve a 24-hour digest of the posts on this blog.");
-            for (MyUser myUser : ofy().load().type(MyUser.class).list()) {
-                if (myUser.isSubscribed()) {
-                    msg.addRecipients(Message.RecipientType.TO, myUser.getEmail());
+            for (UserEntity userEntity : ofy().load().type(UserEntity.class).list()) {
+                if (userEntity.isSubscribed()) {
+                    msg.addRecipients(Message.RecipientType.TO, userEntity.getEmail());
                 }
             }
             Transport.send(msg);

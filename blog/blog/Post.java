@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 public class Post implements Comparable<Post> {
-    @Parent Key<MyUser> userName;
+    @Parent Key<MyPost> userName;
     @Id Long id;
     @Index User user;
     @Index String content;
@@ -22,7 +22,7 @@ public class Post implements Comparable<Post> {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.userName = Key.create(MyUser.class, userName);
+        this.userName = Key.create(MyPost.class, userName);
         date = new Date();
     }
 

@@ -24,7 +24,7 @@
     <%
 
     %>
-    <form name="postform" action="/index.jsp">
+    <form name="postform" action="index.jsp">
         <input type="submit" value="Back to Home">
         <input type="hidden" name="userName" value="${fn:escapeXml(userName)}">
     </form>
