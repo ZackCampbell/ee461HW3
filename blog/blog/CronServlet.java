@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
+import static javax.mail.Transport.send;
 
 public class CronServlet extends HttpServlet {
     private static final Logger _logger = Logger.getLogger(CronServlet.class.getName());
@@ -27,7 +28,7 @@ public class CronServlet extends HttpServlet {
             Properties props = new Properties();
             Session session = Session.getInstance(props, null);
 
-            MimeMessage msg = new MimeMessage(session);
+            Message msg = new MimeMessage(session);
             Address from = new InternetAddress("AUTO_BLOG_DIGEST_NOREPLY@EE461HW3Blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Subscribed to Software Lab Reviews!");
@@ -36,7 +37,8 @@ public class CronServlet extends HttpServlet {
 
             for (UserEntity userEntity : ofy().load().type(UserEntity.class)) {
                 if (userEntity.isSubscribed()) {
-                    msg.addRecipients(Message.RecipientType.TO, userEntity.getEmail());
+                    Address to = new InternetAddress(userEntity.getEmail());
+                    msg.addRecipient(Message.RecipientType.TO, to);
                 }
             }
             msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
@@ -59,8 +61,7 @@ public class CronServlet extends HttpServlet {
                 }
             }
             msg.setContent(parts);
-            Transport.send(msg);
-            response.sendRedirect("/index.jsp");
+            send(msg);
         } catch (Exception ex) {
             System.out.println("Send Failed, Exception: " + ex);
         }
@@ -68,6 +69,5 @@ public class CronServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         doGet(req, resp);
-
     }
 }

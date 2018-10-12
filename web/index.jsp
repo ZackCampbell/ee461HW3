@@ -43,21 +43,13 @@
 
         pageContext.setAttribute("user", user);
 
-        UserEntity userEntity = new UserEntity(user, userName, user.getEmail());
-        if (!ofy().load().type(UserEntity.class).list().contains(userEntity)) {
+        UserEntity userEntity;
+        if (ofy().load().type(UserEntity.class).filter("email", user.getEmail()).first().now() == null) {
+            userEntity = new UserEntity(user, userName, user.getEmail());
             ofy().save().entity(userEntity).now();
         }
-        UserEntity testUser = ofy().load().type(UserEntity.class).filter("email", user.getEmail()).first().now();
-        if (testUser == null) {
-            System.out.println("testUser is null");
-        }
-//        List<UserEntity> users = ofy().load().type(UserEntity.class).list();
-//        System.out.println("Current Database:");
-//        for (UserEntity u : users) {
-//            System.out.println(u.getEmail());
-//        }
-
-        boolean isSubscribed = testUser.isSubscribed();
+        userEntity = ofy().load().type(UserEntity.class).filter("email", user.getEmail()).first().now();
+        boolean isSubscribed = userEntity.isSubscribed();
 
 %>
 
@@ -68,16 +60,16 @@
     <% if (!isSubscribed) { %>
 
     <form action="/croninit" method="post">
-        <input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">
-        <input type="hidden" name="email" value="<%= user.getEmail() %>">
+        <%--<input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">--%>
+        <%--<input type="hidden" name="email" value="<%= user.getEmail() %>">--%>
         <input type="submit" value="Subscribe">
     </form>
 
     <% } else { %>
 
     <form action="/cronremove" method="post">
-        <input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">
-        <input type="hidden" name="email" value="<%= user.getEmail() %>">
+        <%--<input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">--%>
+        <%--<input type="hidden" name="email" value="<%= user.getEmail() %>">--%>
         <input type="submit" value="Unsubscribe">
     </form>
 

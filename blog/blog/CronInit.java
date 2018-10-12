@@ -15,15 +15,17 @@ import javax.servlet.http.*;
 import javax.mail.*;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+import static javax.mail.Transport.send;
 
 public class CronInit extends HttpServlet {
     private static final Logger _logger = Logger.getLogger(CronInit.class.getName());
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             _logger.info("Cron Init has been executed");
             UserService userService = UserServiceFactory.getUserService();
             User user = userService.getCurrentUser();
-            String userName = request.getParameter("userName");
             UserEntity userEntity = ofy().load().type(UserEntity.class).filter("email", user.getEmail()).first().now();
             userEntity.setSubscribed(true);
             ofy().save().entity(userEntity).now();
@@ -31,23 +33,19 @@ public class CronInit extends HttpServlet {
             Properties props = new Properties();
             Session session = Session.getInstance(props, null);
 
-            MimeMessage msg = new MimeMessage(session);
-            Address from = new InternetAddress("AUTO_BLOG_DIGEST_NOREPLY@EE461HW3Blog.appspotmail.com");
+            Message msg = new MimeMessage(session);
+            Address from = new InternetAddress("NOREPLY@EE461HW3Blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Subscribed to Software Lab Reviews!");
-            msg.setSentDate(new Date());
+//            msg.setSentDate(new Date());
             msg.setText(" Thank you for subscribing to Software Lab Reviews! \n" +
                     "You will now receive a 24-hour digest of the posts on this blog.");
-            Address to = new InternetAddress(ofy().load().type(UserEntity.class).id(userName).now().getEmail());
+            Address to = new InternetAddress(user.getEmail());
             msg.addRecipient(Message.RecipientType.TO, to);
-            Transport.send(msg);
-            response.sendRedirect("/index.jsp");
+            send(msg);
         } catch (Exception ex) {
             System.out.println("Send Failed, Exception: " + ex);
         }
-    }
-    @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        doGet(req, resp);
+        resp.sendRedirect("/index.jsp");
     }
 }
