@@ -96,7 +96,6 @@
     ObjectifyService.register(Post.class);
     List<Post> posts = ofy().load().type(Post.class).list();
     Collections.sort(posts);
-    Collections.reverse(posts);
     if (posts.isEmpty()) {
 
 %>
@@ -121,7 +120,7 @@
 %>
 
 <p><i>${fn:escapeXml(post_user.nickname)}</i> wrote on ${fn:escapeXml(post_date)}:</p>
-<h3>Rating: ${fn:escapeXml(post_rating)}/Five</h3>
+<h3>Rating: ${fn:escapeXml(post_rating)}/5</h3>
 <h3><b>"${fn:escapeXml(post_title)}"</b></h3>
 <blockquote>${fn:escapeXml(post_content)}</blockquote>
 

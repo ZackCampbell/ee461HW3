@@ -26,11 +26,11 @@
                 <td style="font-weight:bold;"><input type="text" name="title" size="35" placeholder="Title"></td>
                 <td>
                     <select name="ratingSelect" required>
-                        <option value="One">One</option>
-                        <option value="Two">Two</option>
-                        <option value="Three">Three</option>
-                        <option value="Four">Four</option>
-                        <option value="Five">Five</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                        <option value="4">Four</option>
+                        <option value="5">Five</option>
                     </select>
                 </td>
             </tr>

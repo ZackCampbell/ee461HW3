@@ -13,7 +13,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import static javax.mail.Transport.send;
 
 public class CronServlet extends HttpServlet {
     private static final Logger _logger = Logger.getLogger(CronServlet.class.getName());
@@ -29,11 +28,10 @@ public class CronServlet extends HttpServlet {
             Session session = Session.getInstance(props, null);
 
             Message msg = new MimeMessage(session);
-            Address from = new InternetAddress("AUTO_BLOG_DIGEST_NOREPLY@EE461HW3Blog.appspotmail.com");
+            Address from = new InternetAddress("NOREPLY@ee461hw3blog.appspotmail.com");
             msg.setFrom(from);
             msg.setSubject("Subscribed to Software Lab Reviews!");
             Date date = new Date();
-            msg.setSentDate(date);
 
             for (UserEntity userEntity : ofy().load().type(UserEntity.class)) {
                 if (userEntity.isSubscribed()) {
@@ -61,9 +59,9 @@ public class CronServlet extends HttpServlet {
                 }
             }
             msg.setContent(parts);
-            send(msg);
+            Transport.send(msg);
         } catch (Exception ex) {
-            System.out.println("Send Failed, Exception: " + ex);
+            _logger.warning("Send Failed, Exception: " + ex);
         }
     }
     @Override

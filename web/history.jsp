@@ -6,6 +6,7 @@
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
+<%@ page import="java.util.Comparator" %>
 <%--
   Created by IntelliJ IDEA.
   User: audre
@@ -21,11 +22,50 @@
 </head>
 <body>
     <h1>History of all posts:</h1><br>
-    <form name="postform" action="/index.jsp">
-        <input type="submit" value="Back to Home">
-    </form>
+
+    <%!
+        class SortByHighRating implements Comparator<Post> {
+            @Override
+            public int compare(Post p1, Post p2) {
+                return p1.getRating().compareTo(p2.getRating());
+            }
+        }
+
+        class SortByLowRating implements Comparator<Post> {
+            @Override
+            public int compare(Post p1, Post p2) {
+                return p2.getRating().compareTo(p1.getRating());
+            }
+        }
+
+        class SortByDate implements Comparator<Post> {
+            @Override
+            public int compare(Post p1, Post p2) {
+                if (p1.getDate().after(p2.getDate()))
+                    return -1;
+                else if (p1.getDate().before(p2.getDate()))
+                    return 1;
+                return 0;
+            }
+        }
+    %>
+
+    <table>
+        <tr>
+            <td>
+                <form name="backform" action="/index.jsp">
+                    <input type="submit" value="Back to Home">
+                </form>
+            </td>
+            <td><form action="/history.jsp"><input type="hidden" name="order" value="date"><input type="submit" value="Order Newest to Oldest"></form></td>
+            <td><form action="/history.jsp"><input type="hidden" name="order" highRating"><input type="submit" value="Order by Highest Rating"></form></td>
+            <td><form action="/history.jsp"><input type="hidden" name="order" value="lowRating"><input type="submit" value="Order by Lowest Rating"></form></td>
+        </tr>
+    </table>
+
 <%
     String userName = request.getParameter("userName");
+    String order = request.getParameter("order");
     pageContext.setAttribute("userName", userName);
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
@@ -35,8 +75,26 @@
 
     ObjectifyService.register(Post.class);
     List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();
-    Collections.sort(posts);
-    Collections.reverse(posts);
+    if (order == null)
+        order = "date";
+    switch (order) {
+        case "highRating" :
+            try {
+                Collections.sort(posts, new SortByHighRating());
+            } catch (Exception e) {}
+            break;
+        case "lowRating" :
+            try {
+                Collections.sort(posts, new SortByLowRating());
+            } catch (Exception e) {}
+            break;
+        case "date" :
+            try {
+                Collections.sort(posts, new SortByDate());
+            } catch (Exception e) {}
+            break;
+    }
+
     if (posts.isEmpty()) {
 
 %>
@@ -55,7 +113,7 @@
 %>
 
 <p><i>${fn:escapeXml(post_user.nickname)}</i> wrote on ${fn:escapeXml(post_date)}:</p>
-    <h3>Rating: ${fn:escapeXml(post_rating)}/Five</h3>
+    <h3>Rating: ${fn:escapeXml(post_rating)}/5</h3>
     <h3><b>"${fn:escapeXml(post_title)}"</b></h3>
     <blockquote>${fn:escapeXml(post_content)}</blockquote>
 
