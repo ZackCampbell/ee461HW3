@@ -32,7 +32,6 @@
     ObjectifyService.register(UserEntity.class);
     if (userName == null) {
         userName = "default";
-
     }
 
     pageContext.setAttribute("userName", userName);
@@ -60,16 +59,12 @@
     <% if (!isSubscribed) { %>
 
     <form action="/croninit" method="post">
-        <%--<input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">--%>
-        <%--<input type="hidden" name="email" value="<%= user.getEmail() %>">--%>
         <input type="submit" value="Subscribe">
     </form>
 
     <% } else { %>
 
     <form action="/cronremove" method="post">
-        <%--<input type="hidden" name="userName" value="<%= pageContext.getAttribute("userName") %>">--%>
-        <%--<input type="hidden" name="email" value="<%= user.getEmail() %>">--%>
         <input type="submit" value="Unsubscribe">
     </form>
 
@@ -89,7 +84,8 @@
 <% } %>
 
 <form action="history.jsp">
-  <input type="submit" value="See All Posts">
+    <input type="hidden" name="order" value="date">
+    <input type="submit" value="See All Posts">
 </form>
 
 <%

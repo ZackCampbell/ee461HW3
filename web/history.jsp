@@ -27,14 +27,25 @@
         class SortByHighRating implements Comparator<Post> {
             @Override
             public int compare(Post p1, Post p2) {
-                return p1.getRating().compareTo(p2.getRating());
+                if (p1.getRating().compareTo(p2.getRating()) < 0)
+                    return 1;
+                else if (p1.getRating().compareTo(p2.getRating()) > 0)
+                    return -1;
+                else
+                    return 0;
             }
         }
 
         class SortByLowRating implements Comparator<Post> {
             @Override
             public int compare(Post p1, Post p2) {
-                return p2.getRating().compareTo(p1.getRating());
+                if (p2.getRating().compareTo(p1.getRating()) < 0)
+                    return 1;
+                else if (p2.getRating().compareTo(p1.getRating()) > 0)
+                    return -1;
+                else
+                    return 0;
+
             }
         }
 
@@ -58,7 +69,7 @@
                 </form>
             </td>
             <td><form action="/history.jsp"><input type="hidden" name="order" value="date"><input type="submit" value="Order Newest to Oldest"></form></td>
-            <td><form action="/history.jsp"><input type="hidden" name="order" highRating"><input type="submit" value="Order by Highest Rating"></form></td>
+            <td><form action="/history.jsp"><input type="hidden" name="order" value="highRating"><input type="submit" value="Order by Highest Rating"></form></td>
             <td><form action="/history.jsp"><input type="hidden" name="order" value="lowRating"><input type="submit" value="Order by Lowest Rating"></form></td>
         </tr>
     </table>
@@ -75,8 +86,6 @@
 
     ObjectifyService.register(Post.class);
     List<Post> posts = ObjectifyService.ofy().load().type(Post.class).list();
-    if (order == null)
-        order = "date";
     switch (order) {
         case "highRating" :
             try {

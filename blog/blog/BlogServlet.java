@@ -24,6 +24,6 @@ public class BlogServlet extends HttpServlet {
 
         ofy().save().entity(post).now();   // synchronous
 
-        response.sendRedirect("/history.jsp?name=" + userName);
+        response.sendRedirect("/index.jsp?");
     }
 }
